@@ -1,5 +1,4 @@
 const path = require("path");
-const MiniCssExtractPlugin = require("mini-css-extract-plugin");
 const CleanWebpackPlugin = require("clean-webpack-plugin");
 const { ReactLoadablePlugin } = require("react-loadable/webpack");
 const ManifestPlugin = require("webpack-manifest-plugin");
@@ -24,12 +23,9 @@ module.exports = {
       },
       {
         test: /\.(sa|sc|c)ss$/,
-        use: [
-          {
-            loader: MiniCssExtractPlugin.loader
-          },
-          "css-loader",
-          "postcss-loader",
+        loaders: [
+          "style-loader", // inject CSS to the page
+          "css-loader?modules&importLoaders=1&localIdentName=[name]__[local]___[hash:base64:5]", // translates CSS into CommonJS modules
           "sass-loader"
         ]
       }
@@ -37,11 +33,6 @@ module.exports = {
   },
   plugins: [
     new CleanWebpackPlugin(["public"]),
-    new MiniCssExtractPlugin({
-      filename: "[name].css",
-      chunkFilename: "[id].css"
-    }),
-
     new ReactLoadablePlugin({
       filename: "./public/react-loadable.json"
     }),
